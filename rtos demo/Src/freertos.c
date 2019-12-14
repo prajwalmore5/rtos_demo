@@ -52,6 +52,7 @@ osThreadId defaultTaskHandle;
 osThreadId redLEDHandle;
 osThreadId greenLEDHandle;
 osThreadId blueLEDHandle;
+osMutexId SerialHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -91,6 +92,11 @@ void MX_FREERTOS_Init(void) {
        
   /* USER CODE END Init */
 
+  /* Create the mutex(es) */
+  /* definition and creation of Serial */
+  osMutexDef(Serial);
+  SerialHandle = osMutexCreate(osMutex(Serial));
+
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
@@ -113,15 +119,15 @@ void MX_FREERTOS_Init(void) {
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of redLED */
-  osThreadDef(redLED, redLEDfn, osPriorityHigh, 0, 128);
+  osThreadDef(redLED, redLEDfn, osPriorityIdle, 0, 128);
   redLEDHandle = osThreadCreate(osThread(redLED), NULL);
 
   /* definition and creation of greenLED */
-  osThreadDef(greenLED, greenLEDfn, osPriorityNormal, 0, 128);
+  osThreadDef(greenLED, greenLEDfn, osPriorityIdle, 0, 128);
   greenLEDHandle = osThreadCreate(osThread(greenLED), NULL);
 
   /* definition and creation of blueLED */
-  osThreadDef(blueLED, blueLEDfn, osPriorityNormal, 0, 128);
+  osThreadDef(blueLED, blueLEDfn, osPriorityIdle, 0, 128);
   blueLEDHandle = osThreadCreate(osThread(blueLED), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -167,12 +173,18 @@ void redLEDfn(void const * argument)
 	int i;
   for(;;)
   {
-	  HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
-	  for(i=0;i<5;i++)
+//	  HAL_GPIO_TogglePin(GPIOB, LD1_Pin);
+	  if(osMutexWait(SerialHandle,osWaitForever) == osOK)
 	  {
-		  count=sprintf(buffer,"Red LED running\r\n");
-		  	  HAL_UART_Transmit(&huart2,buffer,count,100);
+		  for(i=0;i<5;i++)
+		 	  {
+		 		  HAL_Delay(1000);
+		 		  count=sprintf(buffer,"Red LED running\r\n");
+		 		  HAL_UART_Transmit(&huart2,buffer,count,100);
+		 	  }
+		  osMutexRelease(SerialHandle);
 	  }
+
 	  osDelay(2000);
   }
   /* USER CODE END redLEDfn */
@@ -195,9 +207,12 @@ void greenLEDfn(void const * argument)
 		int i;
   for(;;)
   {
-	  HAL_GPIO_TogglePin(GPIOB, LD2B4_Pin);
-	  count=sprintf(buffer,"Green LED running\r\n");
-	  	  HAL_UART_Transmit(&huart2,buffer,count,100);
+	  if(osMutexWait(SerialHandle,osWaitForever) == osOK)
+	  {
+		  count=sprintf(buffer,"Green LED running\r\n");
+		  HAL_UART_Transmit(&huart2,buffer,count,100);
+		  osMutexRelease(SerialHandle);
+	  }
     osDelay(2000);
   }
   /* USER CODE END greenLEDfn */
@@ -220,9 +235,12 @@ void blueLEDfn(void const * argument)
 		int i;
   for(;;)
   {
-	  HAL_GPIO_TogglePin(GPIOB, LD3_Pin);
-	  count=sprintf(buffer,"Blue LED running\r\n");
-	  	  	  HAL_UART_Transmit(&huart2,buffer,count,100);
+	  if(osMutexWait(SerialHandle,osWaitForever) == osOK)
+	  	  {
+	  		  count=sprintf(buffer,"Blue LED running\r\n");
+	  		  HAL_UART_Transmit(&huart2,buffer,count,100);
+	  		  osMutexRelease(SerialHandle);
+	  	  }
     osDelay(2000);
   }
   /* USER CODE END blueLEDfn */

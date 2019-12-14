@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/Users/prajw/STM32CubeIDE/workspace_1.0.0/rtos demo/Inc
+HeaderPath=C:/Users/prajw/git/rtos_demo/rtos demo/Inc
 HeaderFiles=stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;FreeRTOSConfig.h;gpio.h;usart.h;
-SourcePath=C:/Users/prajw/STM32CubeIDE/workspace_1.0.0/rtos demo/Src
+SourcePath=C:/Users/prajw/git/rtos_demo/rtos demo/Src
 SourceFiles=stm32f4xx_it.c;stm32f4xx_hal_msp.c;main.c;freertos.c;stm32f4xx_hal_timebase_tim.c;gpio.c;usart.c;
 
 [PreviousLibFiles]

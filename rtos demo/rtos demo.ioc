@@ -1,7 +1,8 @@
 #MicroXplorer Configuration settings - do not modify
 FREERTOS.FootprintOK=true
 FREERTOS.INCLUDE_vTaskDelayUntil=1
-FREERTOS.IPParameters=Tasks01,FootprintOK,INCLUDE_vTaskDelayUntil
+FREERTOS.IPParameters=Tasks01,FootprintOK,INCLUDE_vTaskDelayUntil,Mutexes01
+FREERTOS.Mutexes01=Serial,Dynamic,NULL
 FREERTOS.Tasks01=defaultTask,0,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;redLED,-3,128,redLEDfn,Default,NULL,Dynamic,NULL,NULL;greenLED,-3,128,greenLEDfn,Default,NULL,Dynamic,NULL,NULL;blueLED,-3,128,blueLEDfn,Default,NULL,Dynamic,NULL,NULL
 File.Version=6
 KeepUserPlacement=true
